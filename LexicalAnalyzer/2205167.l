@@ -100,10 +100,10 @@ string char_buf;
     
     unsigned int b_idx, s_idx;
     SymbolInfo* sym = new SymbolInfo(yytext, "CONST_FLOAT");
-    if (symbol_table->insert(sym, b_idx, s_idx)) {
+    if(symbol_table->insert(sym, b_idx, s_idx)){
         symbol_table->printAll(log_file);
         log_file << "\n";
-    } else {
+    } else{
         log_file << "< " << yytext << " : CONST_FLOAT > already exists in ScopeTable# " << symbol_table->getcurrScope()->getId() << " at position " << b_idx << ", " << s_idx << "\n\n";
         delete sym;
     }
@@ -115,10 +115,10 @@ string char_buf;
     
     unsigned int b_idx, s_idx;
     SymbolInfo* sym = new SymbolInfo(yytext, "CONST_INT");
-    if (symbol_table->insert(sym, b_idx, s_idx)) {
+    if(symbol_table->insert(sym, b_idx, s_idx)){
         symbol_table->printAll(log_file);
         log_file << "\n";
-    } else {
+    } else{
         log_file << "< " << yytext << " : CONST_INT > already exists in ScopeTable# " << symbol_table->getcurrScope()->getId() << " at position " << b_idx << ", " << s_idx << "\n\n";
         delete sym;
     }
@@ -135,10 +135,10 @@ string char_buf;
     
     unsigned int b_idx, s_idx;
     SymbolInfo* sym = new SymbolInfo(yytext, "CONST_CHAR");
-    if (symbol_table->insert(sym, b_idx, s_idx)) {
+    if(symbol_table->insert(sym, b_idx, s_idx)){
         symbol_table->printAll(log_file);
         log_file << "\n";
-    } else {
+    } else{
         log_file << "< " << yytext << " : CONST_CHAR > already exists in ScopeTable# " << symbol_table->getcurrScope()->getId() << " at position " << b_idx << ", " << s_idx << "\n\n";
         delete sym;
     }
@@ -146,26 +146,26 @@ string char_buf;
 
 '\\[ntafrbv0\\']' {
     char c = yytext[2];
-    if (c == 'n') c = '\n';
-    else if (c == 't') c = '\t';
-    else if (c == 'a') c = '\a';
-    else if (c == 'f') c = '\f';
-    else if (c == 'r') c = '\r';
-    else if (c == 'b') c = '\b';
-    else if (c == 'v') c = '\v';
-    else if (c == '0') c = '\0';
-    else if (c == '\\') c = '\\';
-    else if (c == '\'') c = '\'';
+    if(c == 'n') c = '\n';
+    else if(c == 't') c = '\t';
+    else if(c == 'a') c = '\a';
+    else if(c == 'f') c = '\f';
+    else if(c == 'r') c = '\r';
+    else if(c == 'b') c = '\b';
+    else if(c == 'v') c = '\v';
+    else if(c == '0') c = '\0';
+    else if(c == '\\') c = '\\';
+    else if(c == '\'') c = '\'';
 
     log_file << "Line no " << line_count << ": Token <CONST_CHAR> Lexeme " << yytext << " found --> <CONST_CHAR, " << c << ">\n\n";
     token_file << "<CONST_CHAR, " << c << "> ";
     
     unsigned int b_idx, s_idx;
     SymbolInfo* sym = new SymbolInfo(yytext, "CONST_CHAR");
-    if (symbol_table->insert(sym, b_idx, s_idx)) {
+    if(symbol_table->insert(sym, b_idx, s_idx)){
         symbol_table->printAll(log_file);
         log_file << "\n";
-    } else {
+    } else{
         log_file << "< " << yytext << " : CONST_CHAR > already exists in ScopeTable# " << symbol_table->getcurrScope()->getId() << " at position " << b_idx << ", " << s_idx << "\n\n";
         delete sym;
     }
@@ -310,10 +310,10 @@ string char_buf;
     
     unsigned int b_idx, s_idx;
     SymbolInfo* sym = new SymbolInfo(yytext, "ID");
-    if (symbol_table->insert(sym, b_idx, s_idx)) {
+    if(symbol_table->insert(sym, b_idx, s_idx)){
         symbol_table->printAll(log_file);
         log_file << "\n";
-    } else {
+    } else{
         log_file << "< " << yytext << " : ID > already exists in ScopeTable# " << symbol_table->getcurrScope()->getId() << " at position " << b_idx << ", " << s_idx << "\n\n";
         delete sym;
     }
@@ -337,14 +337,14 @@ string char_buf;
 
 %%
 
-int main(int argc, char* argv[]) {
-    if (argc < 2) {
+int main(int argc, char* argv[]){
+    if(argc < 2){
         cout << "Please provide input file name via command line." << endl;
         return 1;
     }
 
     FILE* fin = fopen(argv[1], "r");
-    if (!fin) {
+    if(!fin){
         cout << "Cannot open input file." << endl;
         return 1;
     }

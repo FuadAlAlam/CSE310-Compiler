@@ -210,7 +210,7 @@ public:
     }
 
     bool exitScope(ofstream& out){
-        if (curr_scope->getParentScope() == nullptr) {
+        if(curr_scope->getParentScope() == nullptr){
             return false;
         }
         out << "\tScopeTable# " << curr_scope->getId() << " removed\n";
@@ -274,7 +274,7 @@ int main(int argc, char* argv[]){
     if(!getline(infile, line)) return 0;
 
     
-    if (!line.empty() && line.back() == '\r') {
+    if(!line.empty() && line.back() == '\r'){
         line.pop_back();
     }
 
@@ -288,7 +288,7 @@ int main(int argc, char* argv[]){
     unsigned int cmd_counter = 1;
 
     while(getline(infile, line)){
-        if (!line.empty() && line.back() == '\r') {
+        if(!line.empty() && line.back() == '\r'){
             line.pop_back();
         }
 
@@ -366,18 +366,18 @@ int main(int argc, char* argv[]){
             if(type == "FUNCTION"){
                 string return_type = tokens[3];
                 string param_str = "FUNCTION," + return_type + "<==(";
-                for (int i = 4; i < token_count; i++) {
+                for (int i = 4; i < token_count; i++){
                     param_str += tokens[i];
-                    if (i < token_count - 1) param_str += ",";
+                    if(i < token_count - 1) param_str += ",";
                 }
                 param_str += ")";
                 type = param_str;
             } 
             else if(type == "STRUCT" || type == "UNION"){
                 string comp_str = type + ",{";
-                for (int i = 3; i < token_count; i += 2) {
+                for (int i = 3; i < token_count; i += 2){
                     comp_str += "(" + tokens[i] + "," + tokens[i+1] + ")";
-                    if (i + 2 < token_count) comp_str += ",";
+                    if(i + 2 < token_count) comp_str += ",";
                 }
                 comp_str += "}";
                 type = comp_str;

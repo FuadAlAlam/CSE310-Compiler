@@ -1,0 +1,12 @@
+Error at line 3: syntax error, unexpected token(s) '-' before ')'
+
+Error at line 3: 1th parameter's name not given in function definition of var
+
+Error at line 8: syntax error, unexpected token(s) '- y' in declaration list
+
+Error at line 9: syntax error, invalid operand '=' after '+'
+
+Error at line 9: syntax error, missing ';' after expression 'a=2'
+
+Error at line 9: syntax error, missing ';' after expression '6'
+

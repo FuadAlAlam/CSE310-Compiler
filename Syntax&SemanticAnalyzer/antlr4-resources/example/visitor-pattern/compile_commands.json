@@ -1,0 +1,20 @@
+[
+  {
+    "directory": "/home/irtiaz/C/Antlr/practice",
+    "arguments": [
+      "g++",
+      "-std=c++17",
+      "-I/usr/local/include/antlr4-runtime",
+      "-L/usr/local/lib/",
+      "-pthread",
+      "EvalVisitor.cpp",
+      "ExpressionBaseVisitor.cpp",
+      "ExpressionLexer.cpp",
+      "ExpressionParser.cpp",
+      "ExpressionVisitor.cpp",
+      "main.cpp",
+      "-lantlr4-runtime"
+    ],
+    "file": "main.cpp"
+  }
+]
