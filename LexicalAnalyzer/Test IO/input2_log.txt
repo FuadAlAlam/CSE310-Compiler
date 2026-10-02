@@ -9,7 +9,7 @@ Line no 1: Token <LPAREN> Lexeme ( found
 
 Line no 1: Token <RPAREN> Lexeme ) found
 
-Line no 1: Token <LCURL> Lexeme { found
+Line no 1: Token <LCURL> Lexeme{ found
 
 Line no 3: Token <CHAR> Lexeme char found
 

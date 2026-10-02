@@ -2,8 +2,8 @@
 
 //start and program
 
-std::any CSubsetVisitorImpl::visitStartRule(CSubsetParser::StartRuleContext *ctx){
-    std::any p = visit(ctx->program());
+any CSubsetVisitorImpl::visitStartRule(CSubsetParser::StartRuleContext *ctx){
+    any p = visit(ctx->program());
     int line = ctx->getStart()->getLine();
     logFile << "Line " << line << ": start : program\n\n\n\n";
     symbolTable.printAll(logFile);
@@ -12,9 +12,9 @@ std::any CSubsetVisitorImpl::visitStartRule(CSubsetParser::StartRuleContext *ctx
     return p;
 }
 
-std::any CSubsetVisitorImpl::visitProgramUnit(CSubsetParser::ProgramUnitContext *ctx){
-    NodeResult p = std::any_cast<NodeResult>(visit(ctx->p));
-    NodeResult u = std::any_cast<NodeResult>(visit(ctx->u));
+any CSubsetVisitorImpl::visitProgramUnit(CSubsetParser::ProgramUnitContext *ctx){
+    NodeResult p = any_cast<NodeResult>(visit(ctx->p));
+    NodeResult u = any_cast<NodeResult>(visit(ctx->u));
     int line = ctx->u->getStart()->getLine();
     string code = p.text + "\n" + u.text;
     logRule(line, "program : program unit", code, true);
@@ -23,8 +23,8 @@ std::any CSubsetVisitorImpl::visitProgramUnit(CSubsetParser::ProgramUnitContext 
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitUnitOnly(CSubsetParser::UnitOnlyContext *ctx){
-    NodeResult u = std::any_cast<NodeResult>(visit(ctx->u));
+any CSubsetVisitorImpl::visitUnitOnly(CSubsetParser::UnitOnlyContext *ctx){
+    NodeResult u = any_cast<NodeResult>(visit(ctx->u));
     int line = ctx->getStart()->getLine();
     logRule(line, "program : unit", u.text, true);
     return u;
@@ -32,22 +32,22 @@ std::any CSubsetVisitorImpl::visitUnitOnly(CSubsetParser::UnitOnlyContext *ctx){
 
 //unit
 
-std::any CSubsetVisitorImpl::visitUnitVarDecl(CSubsetParser::UnitVarDeclContext *ctx){
-    NodeResult vd = std::any_cast<NodeResult>(visit(ctx->var_declaration()));
+any CSubsetVisitorImpl::visitUnitVarDecl(CSubsetParser::UnitVarDeclContext *ctx){
+    NodeResult vd = any_cast<NodeResult>(visit(ctx->var_declaration()));
     int line = ctx->getStart()->getLine();
     logFile << "Line " << line << ": unit : var_declaration\n\n" << vd.text << "\n\n\n";
     return vd;
 }
 
-std::any CSubsetVisitorImpl::visitUnitFuncDecl(CSubsetParser::UnitFuncDeclContext *ctx){
-    NodeResult fd = std::any_cast<NodeResult>(visit(ctx->func_declaration()));
+any CSubsetVisitorImpl::visitUnitFuncDecl(CSubsetParser::UnitFuncDeclContext *ctx){
+    NodeResult fd = any_cast<NodeResult>(visit(ctx->func_declaration()));
     int line = ctx->getStart()->getLine();
     logFile << "Line " << line << ": unit : func_declaration\n\n" << fd.text << "\n\n\n";
     return fd;
 }
 
-std::any CSubsetVisitorImpl::visitUnitFuncDef(CSubsetParser::UnitFuncDefContext *ctx){
-    NodeResult fd = std::any_cast<NodeResult>(visit(ctx->func_definition()));
+any CSubsetVisitorImpl::visitUnitFuncDef(CSubsetParser::UnitFuncDefContext *ctx){
+    NodeResult fd = any_cast<NodeResult>(visit(ctx->func_definition()));
     int line = ctx->getStart()->getLine();
     logFile << "Line " << line << ": unit : func_definition\n\n" << fd.text << "\n\n\n\n";
     NodeResult res;
@@ -57,8 +57,8 @@ std::any CSubsetVisitorImpl::visitUnitFuncDef(CSubsetParser::UnitFuncDefContext 
 
 //function declaration
 
-std::any CSubsetVisitorImpl::visitFuncDeclNoParams(CSubsetParser::FuncDeclNoParamsContext *ctx){
-    NodeResult ts = std::any_cast<NodeResult>(visit(ctx->type_specifier()));
+any CSubsetVisitorImpl::visitFuncDeclNoParams(CSubsetParser::FuncDeclNoParamsContext *ctx){
+    NodeResult ts = any_cast<NodeResult>(visit(ctx->type_specifier()));
     string name = ctx->ID()->getText();
     int line = ctx->getStart()->getLine();
 
@@ -84,10 +84,10 @@ std::any CSubsetVisitorImpl::visitFuncDeclNoParams(CSubsetParser::FuncDeclNoPara
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitFuncDeclWithParams(CSubsetParser::FuncDeclWithParamsContext *ctx){
-    NodeResult ts = std::any_cast<NodeResult>(visit(ctx->type_specifier()));
+any CSubsetVisitorImpl::visitFuncDeclWithParams(CSubsetParser::FuncDeclWithParamsContext *ctx){
+    NodeResult ts = any_cast<NodeResult>(visit(ctx->type_specifier()));
     string name = ctx->ID()->getText();
-    NodeResult pl = std::any_cast<NodeResult>(visit(ctx->parameter_list()));
+    NodeResult pl = any_cast<NodeResult>(visit(ctx->parameter_list()));
     int line = ctx->getStart()->getLine();
 
     SymbolInfo* existing = symbolTable.lookUpCurrentScope(name);
@@ -116,8 +116,8 @@ std::any CSubsetVisitorImpl::visitFuncDeclWithParams(CSubsetParser::FuncDeclWith
 
 //function definition
 
-std::any CSubsetVisitorImpl::visitFuncDefNoParams(CSubsetParser::FuncDefNoParamsContext *ctx){
-    NodeResult ts = std::any_cast<NodeResult>(visit(ctx->type_specifier()));
+any CSubsetVisitorImpl::visitFuncDefNoParams(CSubsetParser::FuncDefNoParamsContext *ctx){
+    NodeResult ts = any_cast<NodeResult>(visit(ctx->type_specifier()));
     string name = ctx->ID()->getText();
     int line = ctx->getStart()->getLine();
 
@@ -148,7 +148,7 @@ std::any CSubsetVisitorImpl::visitFuncDefNoParams(CSubsetParser::FuncDefNoParams
     }
 
     symbolTable.enterScope();
-    NodeResult cs = std::any_cast<NodeResult>(visit(ctx->compound_statement()));
+    NodeResult cs = any_cast<NodeResult>(visit(ctx->compound_statement()));
 
     string code = ts.text + " " + name + "()" + cs.text;
     logRule(line, "func_definition : type_specifier ID LPAREN RPAREN compound_statement", code, true);
@@ -157,10 +157,10 @@ std::any CSubsetVisitorImpl::visitFuncDefNoParams(CSubsetParser::FuncDefNoParams
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitFuncDefWithParams(CSubsetParser::FuncDefWithParamsContext *ctx){
-    NodeResult ts = std::any_cast<NodeResult>(visit(ctx->type_specifier()));
+any CSubsetVisitorImpl::visitFuncDefWithParams(CSubsetParser::FuncDefWithParamsContext *ctx){
+    NodeResult ts = any_cast<NodeResult>(visit(ctx->type_specifier()));
     string name = ctx->ID()->getText();
-    NodeResult pl = std::any_cast<NodeResult>(visit(ctx->parameter_list()));
+    NodeResult pl = any_cast<NodeResult>(visit(ctx->parameter_list()));
     int line = ctx->getStart()->getLine();
 
     SymbolInfo* existing = symbolTable.lookUpCurrentScope(name);
@@ -200,7 +200,7 @@ std::any CSubsetVisitorImpl::visitFuncDefWithParams(CSubsetParser::FuncDefWithPa
         }
     }
 
-    NodeResult cs = std::any_cast<NodeResult>(visit(ctx->compound_statement()));
+    NodeResult cs = any_cast<NodeResult>(visit(ctx->compound_statement()));
 
     string code = ts.text + " " + name + "(" + pl.text + ")" + cs.text;
     logRule(line, "func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statement", code, true);
@@ -209,10 +209,10 @@ std::any CSubsetVisitorImpl::visitFuncDefWithParams(CSubsetParser::FuncDefWithPa
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitFuncDefErrorParams(CSubsetParser::FuncDefErrorParamsContext *ctx){
-    NodeResult ts = std::any_cast<NodeResult>(visit(ctx->type_specifier()));
+any CSubsetVisitorImpl::visitFuncDefErrorParams(CSubsetParser::FuncDefErrorParamsContext *ctx){
+    NodeResult ts = any_cast<NodeResult>(visit(ctx->type_specifier()));
     string name = ctx->ID()->getText();
-    NodeResult pl = std::any_cast<NodeResult>(visit(ctx->parameter_list()));
+    NodeResult pl = any_cast<NodeResult>(visit(ctx->parameter_list()));
     int line = ctx->getStart()->getLine();
 
     string errToken = ctx->error_tokens()->getText();
@@ -231,7 +231,7 @@ std::any CSubsetVisitorImpl::visitFuncDefErrorParams(CSubsetParser::FuncDefError
     symbolTable.insert(sym);
 
     symbolTable.enterScope();
-    NodeResult cs = std::any_cast<NodeResult>(visit(ctx->compound_statement()));
+    NodeResult cs = any_cast<NodeResult>(visit(ctx->compound_statement()));
 
     string code = ts.text + " " + name + "(" + pl.text + ")" + cs.text;
     logRule(line, "func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statement", code, true);
@@ -242,8 +242,8 @@ std::any CSubsetVisitorImpl::visitFuncDefErrorParams(CSubsetParser::FuncDefError
 
 //parameter list
 
-std::any CSubsetVisitorImpl::visitParamSingle(CSubsetParser::ParamSingleContext *ctx){
-    NodeResult ts = std::any_cast<NodeResult>(visit(ctx->type_specifier()));
+any CSubsetVisitorImpl::visitParamSingle(CSubsetParser::ParamSingleContext *ctx){
+    NodeResult ts = any_cast<NodeResult>(visit(ctx->type_specifier()));
     string name = ctx->ID()->getText();
     int line = ctx->getStart()->getLine();
 
@@ -257,8 +257,8 @@ std::any CSubsetVisitorImpl::visitParamSingle(CSubsetParser::ParamSingleContext 
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitParamSingleNoName(CSubsetParser::ParamSingleNoNameContext *ctx){
-    NodeResult ts = std::any_cast<NodeResult>(visit(ctx->type_specifier()));
+any CSubsetVisitorImpl::visitParamSingleNoName(CSubsetParser::ParamSingleNoNameContext *ctx){
+    NodeResult ts = any_cast<NodeResult>(visit(ctx->type_specifier()));
     int line = ctx->getStart()->getLine();
 
     logRule(line, "parameter_list : type_specifier", ts.text);
@@ -270,9 +270,9 @@ std::any CSubsetVisitorImpl::visitParamSingleNoName(CSubsetParser::ParamSingleNo
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitParamListAdd(CSubsetParser::ParamListAddContext *ctx){
-    NodeResult pl = std::any_cast<NodeResult>(visit(ctx->parameter_list()));
-    NodeResult ts = std::any_cast<NodeResult>(visit(ctx->type_specifier()));
+any CSubsetVisitorImpl::visitParamListAdd(CSubsetParser::ParamListAddContext *ctx){
+    NodeResult pl = any_cast<NodeResult>(visit(ctx->parameter_list()));
+    NodeResult ts = any_cast<NodeResult>(visit(ctx->type_specifier()));
     string name = ctx->ID()->getText();
     int line = ctx->type_specifier()->getStart()->getLine();
 
@@ -292,9 +292,9 @@ std::any CSubsetVisitorImpl::visitParamListAdd(CSubsetParser::ParamListAddContex
     return pl;
 }
 
-std::any CSubsetVisitorImpl::visitParamListAddNoName(CSubsetParser::ParamListAddNoNameContext *ctx){
-    NodeResult pl = std::any_cast<NodeResult>(visit(ctx->parameter_list()));
-    NodeResult ts = std::any_cast<NodeResult>(visit(ctx->type_specifier()));
+any CSubsetVisitorImpl::visitParamListAddNoName(CSubsetParser::ParamListAddNoNameContext *ctx){
+    NodeResult pl = any_cast<NodeResult>(visit(ctx->parameter_list()));
+    NodeResult ts = any_cast<NodeResult>(visit(ctx->type_specifier()));
     int line = ctx->type_specifier()->getStart()->getLine();
 
     string code = pl.text + "," + ts.text;
@@ -308,7 +308,7 @@ std::any CSubsetVisitorImpl::visitParamListAddNoName(CSubsetParser::ParamListAdd
 
 //compound statement
 
-std::any CSubsetVisitorImpl::visitCompoundStmtBody(CSubsetParser::CompoundStmtBodyContext *ctx){
+any CSubsetVisitorImpl::visitCompoundStmtBody(CSubsetParser::CompoundStmtBodyContext *ctx){
     bool isFuncDef = (dynamic_cast<CSubsetParser::FuncDefWithParamsContext*>(ctx->parent) != nullptr) ||
                      (dynamic_cast<CSubsetParser::FuncDefNoParamsContext*>(ctx->parent) != nullptr) ||
                      (dynamic_cast<CSubsetParser::FuncDefErrorParamsContext*>(ctx->parent) != nullptr);
@@ -316,7 +316,7 @@ std::any CSubsetVisitorImpl::visitCompoundStmtBody(CSubsetParser::CompoundStmtBo
         symbolTable.enterScope();
     }
 
-    NodeResult stmts = std::any_cast<NodeResult>(visit(ctx->statements()));
+    NodeResult stmts = any_cast<NodeResult>(visit(ctx->statements()));
     int line = ctx->getStart()->getLine();
     string code = "{\n" + stmts.text + "}";
     logRule(line, "compound_statement : LCURL statements RCURL", code);
@@ -328,7 +328,7 @@ std::any CSubsetVisitorImpl::visitCompoundStmtBody(CSubsetParser::CompoundStmtBo
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitCompoundStmtEmpty(CSubsetParser::CompoundStmtEmptyContext *ctx){
+any CSubsetVisitorImpl::visitCompoundStmtEmpty(CSubsetParser::CompoundStmtEmptyContext *ctx){
     bool isFuncDef = (dynamic_cast<CSubsetParser::FuncDefWithParamsContext*>(ctx->parent) != nullptr) ||
                      (dynamic_cast<CSubsetParser::FuncDefNoParamsContext*>(ctx->parent) != nullptr) ||
                      (dynamic_cast<CSubsetParser::FuncDefErrorParamsContext*>(ctx->parent) != nullptr);
@@ -349,9 +349,9 @@ std::any CSubsetVisitorImpl::visitCompoundStmtEmpty(CSubsetParser::CompoundStmtE
 
 //variable declaration
 
-std::any CSubsetVisitorImpl::visitVarDecl(CSubsetParser::VarDeclContext *ctx){
-    NodeResult ts = std::any_cast<NodeResult>(visit(ctx->type_specifier()));
-    NodeResult dl = std::any_cast<NodeResult>(visit(ctx->declaration_list()));
+any CSubsetVisitorImpl::visitVarDecl(CSubsetParser::VarDeclContext *ctx){
+    NodeResult ts = any_cast<NodeResult>(visit(ctx->type_specifier()));
+    NodeResult dl = any_cast<NodeResult>(visit(ctx->declaration_list()));
     int line = ctx->getStart()->getLine();
 
     for(const auto& item : dl.items){
@@ -377,7 +377,7 @@ std::any CSubsetVisitorImpl::visitVarDecl(CSubsetParser::VarDeclContext *ctx){
 
 //type specifiers
 
-std::any CSubsetVisitorImpl::visitTypeInt(CSubsetParser::TypeIntContext *ctx){
+any CSubsetVisitorImpl::visitTypeInt(CSubsetParser::TypeIntContext *ctx){
     int line = ctx->getStart()->getLine();
     logRule(line, "type_specifier : INT", "int");
     NodeResult res;
@@ -386,7 +386,7 @@ std::any CSubsetVisitorImpl::visitTypeInt(CSubsetParser::TypeIntContext *ctx){
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitTypeFloat(CSubsetParser::TypeFloatContext *ctx){
+any CSubsetVisitorImpl::visitTypeFloat(CSubsetParser::TypeFloatContext *ctx){
     int line = ctx->getStart()->getLine();
     logRule(line, "type_specifier : FLOAT", "float");
     NodeResult res;
@@ -395,7 +395,7 @@ std::any CSubsetVisitorImpl::visitTypeFloat(CSubsetParser::TypeFloatContext *ctx
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitTypeVoid(CSubsetParser::TypeVoidContext *ctx){
+any CSubsetVisitorImpl::visitTypeVoid(CSubsetParser::TypeVoidContext *ctx){
     int line = ctx->getStart()->getLine();
     logRule(line, "type_specifier : VOID", "void");
     NodeResult res;
@@ -406,7 +406,7 @@ std::any CSubsetVisitorImpl::visitTypeVoid(CSubsetParser::TypeVoidContext *ctx){
 
 //declaration list
 
-std::any CSubsetVisitorImpl::visitDeclVar(CSubsetParser::DeclVarContext *ctx){
+any CSubsetVisitorImpl::visitDeclVar(CSubsetParser::DeclVarContext *ctx){
     string name = ctx->ID()->getText();
     int line = ctx->getStart()->getLine();
 
@@ -429,7 +429,7 @@ std::any CSubsetVisitorImpl::visitDeclVar(CSubsetParser::DeclVarContext *ctx){
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitDeclArray(CSubsetParser::DeclArrayContext *ctx){
+any CSubsetVisitorImpl::visitDeclArray(CSubsetParser::DeclArrayContext *ctx){
     string name = ctx->ID()->getText();
     string sizeStr = ctx->CONST_INT()->getText();
     int size = stoi(sizeStr);
@@ -456,8 +456,8 @@ std::any CSubsetVisitorImpl::visitDeclArray(CSubsetParser::DeclArrayContext *ctx
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitDeclListVar(CSubsetParser::DeclListVarContext *ctx){
-    NodeResult dl = std::any_cast<NodeResult>(visit(ctx->dl));
+any CSubsetVisitorImpl::visitDeclListVar(CSubsetParser::DeclListVarContext *ctx){
+    NodeResult dl = any_cast<NodeResult>(visit(ctx->dl));
     string name = ctx->ID()->getText();
     int line = ctx->ID()->getSymbol()->getLine();
 
@@ -480,8 +480,8 @@ std::any CSubsetVisitorImpl::visitDeclListVar(CSubsetParser::DeclListVarContext 
     return dl;
 }
 
-std::any CSubsetVisitorImpl::visitDeclListArray(CSubsetParser::DeclListArrayContext *ctx){
-    NodeResult dl = std::any_cast<NodeResult>(visit(ctx->dl));
+any CSubsetVisitorImpl::visitDeclListArray(CSubsetParser::DeclListArrayContext *ctx){
+    NodeResult dl = any_cast<NodeResult>(visit(ctx->dl));
     string name = ctx->ID()->getText();
     string sizeStr = ctx->CONST_INT()->getText();
     int size = stoi(sizeStr);
@@ -507,8 +507,8 @@ std::any CSubsetVisitorImpl::visitDeclListArray(CSubsetParser::DeclListArrayCont
     return dl;
 }
 
-std::any CSubsetVisitorImpl::visitDeclListErrorVar(CSubsetParser::DeclListErrorVarContext *ctx){
-    NodeResult dl = std::any_cast<NodeResult>(visit(ctx->dl));
+any CSubsetVisitorImpl::visitDeclListErrorVar(CSubsetParser::DeclListErrorVarContext *ctx){
+    NodeResult dl = any_cast<NodeResult>(visit(ctx->dl));
     string name = ctx->ID()->getText();
     int line = ctx->getStart()->getLine();
     reportError(line, "syntax error, unexpected token(s) '- y' in declaration list");
@@ -524,8 +524,8 @@ std::any CSubsetVisitorImpl::visitDeclListErrorVar(CSubsetParser::DeclListErrorV
     return dl;
 }
 
-std::any CSubsetVisitorImpl::visitDeclListErrorArray(CSubsetParser::DeclListErrorArrayContext *ctx){
-    NodeResult dl = std::any_cast<NodeResult>(visit(ctx->dl));
+any CSubsetVisitorImpl::visitDeclListErrorArray(CSubsetParser::DeclListErrorArrayContext *ctx){
+    NodeResult dl = any_cast<NodeResult>(visit(ctx->dl));
     string name = ctx->ID()->getText();
     string sizeStr = ctx->CONST_INT()->getText();
     int size = stoi(sizeStr);
@@ -546,8 +546,8 @@ std::any CSubsetVisitorImpl::visitDeclListErrorArray(CSubsetParser::DeclListErro
 
 //statements
 
-std::any CSubsetVisitorImpl::visitStmtsSingle(CSubsetParser::StmtsSingleContext *ctx){
-    NodeResult s = std::any_cast<NodeResult>(visit(ctx->statement()));
+any CSubsetVisitorImpl::visitStmtsSingle(CSubsetParser::StmtsSingleContext *ctx){
+    NodeResult s = any_cast<NodeResult>(visit(ctx->statement()));
     int line = ctx->getStart()->getLine();
     logRule(line, "statements : statement", s.text, true);
     NodeResult res;
@@ -555,9 +555,9 @@ std::any CSubsetVisitorImpl::visitStmtsSingle(CSubsetParser::StmtsSingleContext 
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitStmtsAdd(CSubsetParser::StmtsAddContext *ctx){
-    NodeResult ss = std::any_cast<NodeResult>(visit(ctx->statements()));
-    NodeResult s = std::any_cast<NodeResult>(visit(ctx->statement()));
+any CSubsetVisitorImpl::visitStmtsAdd(CSubsetParser::StmtsAddContext *ctx){
+    NodeResult ss = any_cast<NodeResult>(visit(ctx->statements()));
+    NodeResult s = any_cast<NodeResult>(visit(ctx->statement()));
     int line = ctx->statement()->getStart()->getLine();
     string code = ss.text + s.text;
     logRule(line, "statements : statements statement", code, true);
@@ -568,8 +568,8 @@ std::any CSubsetVisitorImpl::visitStmtsAdd(CSubsetParser::StmtsAddContext *ctx){
 
 //statement
 
-std::any CSubsetVisitorImpl::visitStmtVarDecl(CSubsetParser::StmtVarDeclContext *ctx){
-    NodeResult vd = std::any_cast<NodeResult>(visit(ctx->var_declaration()));
+any CSubsetVisitorImpl::visitStmtVarDecl(CSubsetParser::StmtVarDeclContext *ctx){
+    NodeResult vd = any_cast<NodeResult>(visit(ctx->var_declaration()));
     int line = ctx->getStart()->getLine();
     logRule(line, "statement : var_declaration", vd.text, true);
     NodeResult res;
@@ -577,8 +577,8 @@ std::any CSubsetVisitorImpl::visitStmtVarDecl(CSubsetParser::StmtVarDeclContext 
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitStmtExpr(CSubsetParser::StmtExprContext *ctx){
-    NodeResult es = std::any_cast<NodeResult>(visit(ctx->expression_statement()));
+any CSubsetVisitorImpl::visitStmtExpr(CSubsetParser::StmtExprContext *ctx){
+    NodeResult es = any_cast<NodeResult>(visit(ctx->expression_statement()));
     int line = ctx->getStart()->getLine();
     logRule(line, "statement : expression_statement", es.text, true);
     NodeResult res;
@@ -586,8 +586,8 @@ std::any CSubsetVisitorImpl::visitStmtExpr(CSubsetParser::StmtExprContext *ctx){
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitStmtCompound(CSubsetParser::StmtCompoundContext *ctx){
-    NodeResult cs = std::any_cast<NodeResult>(visit(ctx->compound_statement()));
+any CSubsetVisitorImpl::visitStmtCompound(CSubsetParser::StmtCompoundContext *ctx){
+    NodeResult cs = any_cast<NodeResult>(visit(ctx->compound_statement()));
     int line = ctx->getStart()->getLine();
     logRule(line, "statement : compound_statement", cs.text, true);
     NodeResult res;
@@ -595,11 +595,11 @@ std::any CSubsetVisitorImpl::visitStmtCompound(CSubsetParser::StmtCompoundContex
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitStmtFor(CSubsetParser::StmtForContext *ctx){
-    NodeResult es1 = std::any_cast<NodeResult>(visit(ctx->es1));
-    NodeResult es2 = std::any_cast<NodeResult>(visit(ctx->es2));
-    NodeResult e = std::any_cast<NodeResult>(visit(ctx->e));
-    NodeResult s = std::any_cast<NodeResult>(visit(ctx->s));
+any CSubsetVisitorImpl::visitStmtFor(CSubsetParser::StmtForContext *ctx){
+    NodeResult es1 = any_cast<NodeResult>(visit(ctx->es1));
+    NodeResult es2 = any_cast<NodeResult>(visit(ctx->es2));
+    NodeResult e = any_cast<NodeResult>(visit(ctx->e));
+    NodeResult s = any_cast<NodeResult>(visit(ctx->s));
     int line = ctx->getStart()->getLine();
 
     string code = "for(" + es1.text + es2.text + e.text + ")" + s.text;
@@ -609,13 +609,13 @@ std::any CSubsetVisitorImpl::visitStmtFor(CSubsetParser::StmtForContext *ctx){
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitStmtIf(CSubsetParser::StmtIfContext *ctx){
-    NodeResult e = std::any_cast<NodeResult>(visit(ctx->e));
-    NodeResult s1 = std::any_cast<NodeResult>(visit(ctx->s1));
+any CSubsetVisitorImpl::visitStmtIf(CSubsetParser::StmtIfContext *ctx){
+    NodeResult e = any_cast<NodeResult>(visit(ctx->e));
+    NodeResult s1 = any_cast<NodeResult>(visit(ctx->s1));
     int line = ctx->getStart()->getLine();
 
     if(ctx->s2 != nullptr){
-        NodeResult s2 = std::any_cast<NodeResult>(visit(ctx->s2));
+        NodeResult s2 = any_cast<NodeResult>(visit(ctx->s2));
         string code = "if(" + e.text + ")" + s1.text + "\nelse\n" + s2.text;
         logRule(line, "statement : IF LPAREN expression RPAREN statement ELSE statement", code, true);
         NodeResult res;
@@ -631,9 +631,9 @@ std::any CSubsetVisitorImpl::visitStmtIf(CSubsetParser::StmtIfContext *ctx){
     }
 }
 
-std::any CSubsetVisitorImpl::visitStmtWhile(CSubsetParser::StmtWhileContext *ctx){
-    NodeResult e = std::any_cast<NodeResult>(visit(ctx->e));
-    NodeResult s = std::any_cast<NodeResult>(visit(ctx->s));
+any CSubsetVisitorImpl::visitStmtWhile(CSubsetParser::StmtWhileContext *ctx){
+    NodeResult e = any_cast<NodeResult>(visit(ctx->e));
+    NodeResult s = any_cast<NodeResult>(visit(ctx->s));
     int line = ctx->getStart()->getLine();
 
     string code = "while(" + e.text + ")" + s.text;
@@ -643,7 +643,7 @@ std::any CSubsetVisitorImpl::visitStmtWhile(CSubsetParser::StmtWhileContext *ctx
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitStmtPrint(CSubsetParser::StmtPrintContext *ctx){
+any CSubsetVisitorImpl::visitStmtPrint(CSubsetParser::StmtPrintContext *ctx){
     string name = ctx->ID()->getText();
     int line = ctx->getStart()->getLine();
 
@@ -659,8 +659,8 @@ std::any CSubsetVisitorImpl::visitStmtPrint(CSubsetParser::StmtPrintContext *ctx
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitStmtReturn(CSubsetParser::StmtReturnContext *ctx){
-    NodeResult e = std::any_cast<NodeResult>(visit(ctx->e));
+any CSubsetVisitorImpl::visitStmtReturn(CSubsetParser::StmtReturnContext *ctx){
+    NodeResult e = any_cast<NodeResult>(visit(ctx->e));
     int line = ctx->getStart()->getLine();
 
     string code = "return " + e.text + ";";
@@ -672,7 +672,7 @@ std::any CSubsetVisitorImpl::visitStmtReturn(CSubsetParser::StmtReturnContext *c
 
 //expression statement
 
-std::any CSubsetVisitorImpl::visitExprStmtSemicolon(CSubsetParser::ExprStmtSemicolonContext *ctx){
+any CSubsetVisitorImpl::visitExprStmtSemicolon(CSubsetParser::ExprStmtSemicolonContext *ctx){
     int line = ctx->getStart()->getLine();
     logRule(line, "expression_statement : SEMICOLON", ";");
     NodeResult res;
@@ -680,8 +680,8 @@ std::any CSubsetVisitorImpl::visitExprStmtSemicolon(CSubsetParser::ExprStmtSemic
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitExprStmtExpr(CSubsetParser::ExprStmtExprContext *ctx){
-    NodeResult e = std::any_cast<NodeResult>(visit(ctx->expression()));
+any CSubsetVisitorImpl::visitExprStmtExpr(CSubsetParser::ExprStmtExprContext *ctx){
+    NodeResult e = any_cast<NodeResult>(visit(ctx->expression()));
     int line = ctx->getStart()->getLine();
     string code = e.text + ";";
     logRule(line, "expression_statement : expression SEMICOLON", code);
@@ -690,8 +690,8 @@ std::any CSubsetVisitorImpl::visitExprStmtExpr(CSubsetParser::ExprStmtExprContex
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitExprStmtNoSemicolon(CSubsetParser::ExprStmtNoSemicolonContext *ctx){
-    NodeResult e = std::any_cast<NodeResult>(visit(ctx->expression()));
+any CSubsetVisitorImpl::visitExprStmtNoSemicolon(CSubsetParser::ExprStmtNoSemicolonContext *ctx){
+    NodeResult e = any_cast<NodeResult>(visit(ctx->expression()));
     int line = ctx->getStart()->getLine();
     reportError(line, "syntax error, missing ';' after expression '" + e.text + "'");
     logRule(line, "expression_statement : expression (missing SEMICOLON)", e.text);
@@ -702,7 +702,7 @@ std::any CSubsetVisitorImpl::visitExprStmtNoSemicolon(CSubsetParser::ExprStmtNoS
 
 //variable
 
-std::any CSubsetVisitorImpl::visitVarSimple(CSubsetParser::VarSimpleContext *ctx){
+any CSubsetVisitorImpl::visitVarSimple(CSubsetParser::VarSimpleContext *ctx){
     string name = ctx->ID()->getText();
     int line = ctx->getStart()->getLine();
 
@@ -730,9 +730,9 @@ std::any CSubsetVisitorImpl::visitVarSimple(CSubsetParser::VarSimpleContext *ctx
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitVarArray(CSubsetParser::VarArrayContext *ctx){
+any CSubsetVisitorImpl::visitVarArray(CSubsetParser::VarArrayContext *ctx){
     string name = ctx->ID()->getText();
-    NodeResult e = std::any_cast<NodeResult>(visit(ctx->expression()));
+    NodeResult e = any_cast<NodeResult>(visit(ctx->expression()));
     int line = ctx->getStart()->getLine();
 
     SymbolInfo* sym = symbolTable.lookUp(name);
@@ -765,16 +765,16 @@ std::any CSubsetVisitorImpl::visitVarArray(CSubsetParser::VarArrayContext *ctx){
 
 //expression
 
-std::any CSubsetVisitorImpl::visitExprLogic(CSubsetParser::ExprLogicContext *ctx){
-    NodeResult le = std::any_cast<NodeResult>(visit(ctx->logic_expression()));
+any CSubsetVisitorImpl::visitExprLogic(CSubsetParser::ExprLogicContext *ctx){
+    NodeResult le = any_cast<NodeResult>(visit(ctx->logic_expression()));
     int line = ctx->getStart()->getLine();
     logRule(line, "expression : logic expression", le.text);
     return le;
 }
 
-std::any CSubsetVisitorImpl::visitExprAssign(CSubsetParser::ExprAssignContext *ctx){
-    NodeResult v = std::any_cast<NodeResult>(visit(ctx->variable()));
-    NodeResult le = std::any_cast<NodeResult>(visit(ctx->logic_expression()));
+any CSubsetVisitorImpl::visitExprAssign(CSubsetParser::ExprAssignContext *ctx){
+    NodeResult v = any_cast<NodeResult>(visit(ctx->variable()));
+    NodeResult le = any_cast<NodeResult>(visit(ctx->logic_expression()));
     int line = ctx->getStart()->getLine();
 
     if(le.type == "VOID"){
@@ -794,17 +794,17 @@ std::any CSubsetVisitorImpl::visitExprAssign(CSubsetParser::ExprAssignContext *c
 
 //logic expression
 
-std::any CSubsetVisitorImpl::visitLogicRel(CSubsetParser::LogicRelContext *ctx){
-    NodeResult re = std::any_cast<NodeResult>(visit(ctx->rel_expression()));
+any CSubsetVisitorImpl::visitLogicRel(CSubsetParser::LogicRelContext *ctx){
+    NodeResult re = any_cast<NodeResult>(visit(ctx->rel_expression()));
     int line = ctx->getStart()->getLine();
     logRule(line, "logic_expression : rel_expression", re.text);
     return re;
 }
 
-std::any CSubsetVisitorImpl::visitLogicOp(CSubsetParser::LogicOpContext *ctx){
-    NodeResult le1 = std::any_cast<NodeResult>(visit(ctx->le1));
+any CSubsetVisitorImpl::visitLogicOp(CSubsetParser::LogicOpContext *ctx){
+    NodeResult le1 = any_cast<NodeResult>(visit(ctx->le1));
     string op = ctx->LOGICOP()->getText();
-    NodeResult le2 = std::any_cast<NodeResult>(visit(ctx->le2));
+    NodeResult le2 = any_cast<NodeResult>(visit(ctx->le2));
     int line = ctx->getStart()->getLine();
 
     if(le1.type == "VOID" || le2.type == "VOID"){
@@ -822,17 +822,17 @@ std::any CSubsetVisitorImpl::visitLogicOp(CSubsetParser::LogicOpContext *ctx){
 
 //relational expression
 
-std::any CSubsetVisitorImpl::visitRelSimple(CSubsetParser::RelSimpleContext *ctx){
-    NodeResult se = std::any_cast<NodeResult>(visit(ctx->simple_expression()));
+any CSubsetVisitorImpl::visitRelSimple(CSubsetParser::RelSimpleContext *ctx){
+    NodeResult se = any_cast<NodeResult>(visit(ctx->simple_expression()));
     int line = ctx->getStart()->getLine();
     logRule(line, "rel_expression : simple_expression", se.text);
     return se;
 }
 
-std::any CSubsetVisitorImpl::visitRelOp(CSubsetParser::RelOpContext *ctx){
-    NodeResult se1 = std::any_cast<NodeResult>(visit(ctx->se1));
+any CSubsetVisitorImpl::visitRelOp(CSubsetParser::RelOpContext *ctx){
+    NodeResult se1 = any_cast<NodeResult>(visit(ctx->se1));
     string op = ctx->RELOP()->getText();
-    NodeResult se2 = std::any_cast<NodeResult>(visit(ctx->se2));
+    NodeResult se2 = any_cast<NodeResult>(visit(ctx->se2));
     int line = ctx->getStart()->getLine();
 
     if(se1.type == "VOID" || se2.type == "VOID"){
@@ -850,17 +850,17 @@ std::any CSubsetVisitorImpl::visitRelOp(CSubsetParser::RelOpContext *ctx){
 
 //simple expression
 
-std::any CSubsetVisitorImpl::visitSimpleTerm(CSubsetParser::SimpleTermContext *ctx){
-    NodeResult t = std::any_cast<NodeResult>(visit(ctx->term()));
+any CSubsetVisitorImpl::visitSimpleTerm(CSubsetParser::SimpleTermContext *ctx){
+    NodeResult t = any_cast<NodeResult>(visit(ctx->term()));
     int line = ctx->getStart()->getLine();
     logRule(line, "simple_expression : term", t.text);
     return t;
 }
 
-std::any CSubsetVisitorImpl::visitSimpleAdd(CSubsetParser::SimpleAddContext *ctx){
-    NodeResult se = std::any_cast<NodeResult>(visit(ctx->se));
+any CSubsetVisitorImpl::visitSimpleAdd(CSubsetParser::SimpleAddContext *ctx){
+    NodeResult se = any_cast<NodeResult>(visit(ctx->se));
     string op = ctx->ADDOP()->getText();
-    NodeResult t = std::any_cast<NodeResult>(visit(ctx->t));
+    NodeResult t = any_cast<NodeResult>(visit(ctx->t));
     int line = ctx->getStart()->getLine();
 
     string retType = "INT";
@@ -881,8 +881,8 @@ std::any CSubsetVisitorImpl::visitSimpleAdd(CSubsetParser::SimpleAddContext *ctx
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitSimpleAddErrorAssign(CSubsetParser::SimpleAddErrorAssignContext *ctx){
-    NodeResult se = std::any_cast<NodeResult>(visit(ctx->se));
+any CSubsetVisitorImpl::visitSimpleAddErrorAssign(CSubsetParser::SimpleAddErrorAssignContext *ctx){
+    NodeResult se = any_cast<NodeResult>(visit(ctx->se));
     int line = ctx->getStart()->getLine();
     reportError(line, "syntax error, invalid operand '=' after '+'");
     return se;
@@ -890,17 +890,17 @@ std::any CSubsetVisitorImpl::visitSimpleAddErrorAssign(CSubsetParser::SimpleAddE
 
 //term
 
-std::any CSubsetVisitorImpl::visitTermUnary(CSubsetParser::TermUnaryContext *ctx){
-    NodeResult ue = std::any_cast<NodeResult>(visit(ctx->unary_expression()));
+any CSubsetVisitorImpl::visitTermUnary(CSubsetParser::TermUnaryContext *ctx){
+    NodeResult ue = any_cast<NodeResult>(visit(ctx->unary_expression()));
     int line = ctx->getStart()->getLine();
     logRule(line, "term : unary_expression", ue.text);
     return ue;
 }
 
-std::any CSubsetVisitorImpl::visitTermMul(CSubsetParser::TermMulContext *ctx){
-    NodeResult t = std::any_cast<NodeResult>(visit(ctx->t));
+any CSubsetVisitorImpl::visitTermMul(CSubsetParser::TermMulContext *ctx){
+    NodeResult t = any_cast<NodeResult>(visit(ctx->t));
     string op = ctx->MULOP()->getText();
-    NodeResult ue = std::any_cast<NodeResult>(visit(ctx->ue));
+    NodeResult ue = any_cast<NodeResult>(visit(ctx->ue));
     int line = ctx->getStart()->getLine();
 
     string retType = "INT";
@@ -932,16 +932,16 @@ std::any CSubsetVisitorImpl::visitTermMul(CSubsetParser::TermMulContext *ctx){
 
 //unary expression
 
-std::any CSubsetVisitorImpl::visitUnaryFactor(CSubsetParser::UnaryFactorContext *ctx){
-    NodeResult f = std::any_cast<NodeResult>(visit(ctx->factor()));
+any CSubsetVisitorImpl::visitUnaryFactor(CSubsetParser::UnaryFactorContext *ctx){
+    NodeResult f = any_cast<NodeResult>(visit(ctx->factor()));
     int line = ctx->getStart()->getLine();
     logRule(line, "unary_expression : factor", f.text);
     return f;
 }
 
-std::any CSubsetVisitorImpl::visitUnaryAdd(CSubsetParser::UnaryAddContext *ctx){
+any CSubsetVisitorImpl::visitUnaryAdd(CSubsetParser::UnaryAddContext *ctx){
     string op = ctx->ADDOP()->getText();
-    NodeResult ue = std::any_cast<NodeResult>(visit(ctx->unary_expression()));
+    NodeResult ue = any_cast<NodeResult>(visit(ctx->unary_expression()));
     int line = ctx->getStart()->getLine();
 
     if(ue.type == "VOID"){
@@ -957,8 +957,8 @@ std::any CSubsetVisitorImpl::visitUnaryAdd(CSubsetParser::UnaryAddContext *ctx){
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitUnaryNot(CSubsetParser::UnaryNotContext *ctx){
-    NodeResult ue = std::any_cast<NodeResult>(visit(ctx->unary_expression()));
+any CSubsetVisitorImpl::visitUnaryNot(CSubsetParser::UnaryNotContext *ctx){
+    NodeResult ue = any_cast<NodeResult>(visit(ctx->unary_expression()));
     int line = ctx->getStart()->getLine();
 
     if(ue.type == "VOID"){
@@ -976,14 +976,14 @@ std::any CSubsetVisitorImpl::visitUnaryNot(CSubsetParser::UnaryNotContext *ctx){
 
 //factor
 
-std::any CSubsetVisitorImpl::visitFactorVar(CSubsetParser::FactorVarContext *ctx){
-    NodeResult v = std::any_cast<NodeResult>(visit(ctx->variable()));
+any CSubsetVisitorImpl::visitFactorVar(CSubsetParser::FactorVarContext *ctx){
+    NodeResult v = any_cast<NodeResult>(visit(ctx->variable()));
     int line = ctx->getStart()->getLine();
     logRule(line, "factor : variable", v.text);
     return v;
 }
 
-std::any CSubsetVisitorImpl::visitFactorInt(CSubsetParser::FactorIntContext *ctx){
+any CSubsetVisitorImpl::visitFactorInt(CSubsetParser::FactorIntContext *ctx){
     string valStr = ctx->CONST_INT()->getText();
     int val = stoi(valStr);
     int line = ctx->getStart()->getLine();
@@ -997,7 +997,7 @@ std::any CSubsetVisitorImpl::visitFactorInt(CSubsetParser::FactorIntContext *ctx
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitFactorFloat(CSubsetParser::FactorFloatContext *ctx){
+any CSubsetVisitorImpl::visitFactorFloat(CSubsetParser::FactorFloatContext *ctx){
     string rawStr = ctx->CONST_FLOAT()->getText();
     stringstream ss;
     ss << fixed << setprecision(2) << stod(rawStr);
@@ -1011,8 +1011,8 @@ std::any CSubsetVisitorImpl::visitFactorFloat(CSubsetParser::FactorFloatContext 
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitFactorParen(CSubsetParser::FactorParenContext *ctx){
-    NodeResult e = std::any_cast<NodeResult>(visit(ctx->expression()));
+any CSubsetVisitorImpl::visitFactorParen(CSubsetParser::FactorParenContext *ctx){
+    NodeResult e = any_cast<NodeResult>(visit(ctx->expression()));
     int line = ctx->getStart()->getLine();
     string code = "(" + e.text + ")";
     logRule(line, "factor : LPAREN expression RPAREN", code);
@@ -1023,8 +1023,8 @@ std::any CSubsetVisitorImpl::visitFactorParen(CSubsetParser::FactorParenContext 
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitFactorInc(CSubsetParser::FactorIncContext *ctx){
-    NodeResult v = std::any_cast<NodeResult>(visit(ctx->variable()));
+any CSubsetVisitorImpl::visitFactorInc(CSubsetParser::FactorIncContext *ctx){
+    NodeResult v = any_cast<NodeResult>(visit(ctx->variable()));
     int line = ctx->getStart()->getLine();
     string code = v.text + "++";
     logRule(line, "factor : variable INCOP", code);
@@ -1035,8 +1035,8 @@ std::any CSubsetVisitorImpl::visitFactorInc(CSubsetParser::FactorIncContext *ctx
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitFactorDec(CSubsetParser::FactorDecContext *ctx){
-    NodeResult v = std::any_cast<NodeResult>(visit(ctx->variable()));
+any CSubsetVisitorImpl::visitFactorDec(CSubsetParser::FactorDecContext *ctx){
+    NodeResult v = any_cast<NodeResult>(visit(ctx->variable()));
     int line = ctx->getStart()->getLine();
     string code = v.text + "--";
     logRule(line, "factor : variable DECOP", code);
@@ -1047,9 +1047,9 @@ std::any CSubsetVisitorImpl::visitFactorDec(CSubsetParser::FactorDecContext *ctx
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitFactorFuncCall(CSubsetParser::FactorFuncCallContext *ctx){
+any CSubsetVisitorImpl::visitFactorFuncCall(CSubsetParser::FactorFuncCallContext *ctx){
     string name = ctx->ID()->getText();
-    NodeResult args = std::any_cast<NodeResult>(visit(ctx->argument_list()));
+    NodeResult args = any_cast<NodeResult>(visit(ctx->argument_list()));
     int line = ctx->getStart()->getLine();
 
     SymbolInfo* sym = symbolTable.lookUp(name);
@@ -1090,20 +1090,20 @@ std::any CSubsetVisitorImpl::visitFactorFuncCall(CSubsetParser::FactorFuncCallCo
 
 //argument list and arguments
 
-std::any CSubsetVisitorImpl::visitArgListEmpty(CSubsetParser::ArgListEmptyContext *ctx){
+any CSubsetVisitorImpl::visitArgListEmpty(CSubsetParser::ArgListEmptyContext *ctx){
     NodeResult res;
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitArgListNotEmpty(CSubsetParser::ArgListNotEmptyContext *ctx){
-    NodeResult args = std::any_cast<NodeResult>(visit(ctx->arguments()));
+any CSubsetVisitorImpl::visitArgListNotEmpty(CSubsetParser::ArgListNotEmptyContext *ctx){
+    NodeResult args = any_cast<NodeResult>(visit(ctx->arguments()));
     int line = ctx->getStart()->getLine();
     logRule(line, "argument_list : arguments", args.text);
     return args;
 }
 
-std::any CSubsetVisitorImpl::visitArgsSingle(CSubsetParser::ArgsSingleContext *ctx){
-    NodeResult le = std::any_cast<NodeResult>(visit(ctx->logic_expression()));
+any CSubsetVisitorImpl::visitArgsSingle(CSubsetParser::ArgsSingleContext *ctx){
+    NodeResult le = any_cast<NodeResult>(visit(ctx->logic_expression()));
     int line = ctx->getStart()->getLine();
     logRule(line, "arguments : logic_expression", le.text);
 
@@ -1114,9 +1114,9 @@ std::any CSubsetVisitorImpl::visitArgsSingle(CSubsetParser::ArgsSingleContext *c
     return res;
 }
 
-std::any CSubsetVisitorImpl::visitArgsAdd(CSubsetParser::ArgsAddContext *ctx){
-    NodeResult args = std::any_cast<NodeResult>(visit(ctx->arguments()));
-    NodeResult le = std::any_cast<NodeResult>(visit(ctx->logic_expression()));
+any CSubsetVisitorImpl::visitArgsAdd(CSubsetParser::ArgsAddContext *ctx){
+    NodeResult args = any_cast<NodeResult>(visit(ctx->arguments()));
+    NodeResult le = any_cast<NodeResult>(visit(ctx->logic_expression()));
     int line = ctx->getStart()->getLine();
 
     string code = args.text + "," + le.text;

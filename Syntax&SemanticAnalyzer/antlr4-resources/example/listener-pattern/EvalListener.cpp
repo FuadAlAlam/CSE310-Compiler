@@ -1,4 +1,4 @@
-#include "EvalListener.h"
+#include"EvalListener.h"
 
 void EvalListener::exitAdd(ExpressionParser::AddContext *ctx){
     int left = values[ctx->expression()];
@@ -25,7 +25,7 @@ void EvalListener::exitParen(ExpressionParser::ParenContext *ctx){
 }
 
 void EvalListener::exitInt(ExpressionParser::IntContext *ctx){
-    values[ctx] = std::stoi(ctx->INT()->getText());
+    values[ctx] = stoi(ctx->INT()->getText());
 }
 
 void EvalListener::exitStart(ExpressionParser::StartContext *ctx){

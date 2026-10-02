@@ -1,7 +1,7 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
+#include<iostream>
+#include<fstream>
+#include<sstream>
+#include<string>
 
 using namespace std;
 
@@ -61,7 +61,7 @@ class ScopeTable{
     unsigned int SDBMHash(string str){
         unsigned int hash = 0;
         for(size_t i = 0; i < str.length(); i++){
-            hash = ((str[i]) + (hash << 6) + (hash << 16) - hash) % num_buckets;
+            hash = ((str[i]) + (hash<<6) + (hash<<16) - hash) % num_buckets;
         }
         return hash; 
     }
@@ -164,15 +164,15 @@ public:
             tabs += "\t";
         }
 
-        out << tabs << "ScopeTable# " << id << "\n";
+        out<<tabs<<"ScopeTable# "<<id<<"\n";
         for(unsigned int i = 0; i < num_buckets; i++){
-            out << tabs << (i + 1) << "--> ";
+            out<<tabs<<(i + 1)<<"--> ";
             SymbolInfo* temp = buckets[i];
             while(temp != nullptr){
-                out << "<" << temp->getName() << "," << temp->getType() << "> ";
+                out<<"<"<<temp->getName()<<","<<temp->getType()<<"> ";
                 temp = temp->getNext();
             }
-            out << "\n";
+            out<<"\n";
         }
     }
 };
@@ -206,14 +206,14 @@ public:
         scope_counter++;
         ScopeTable* new_scope = new ScopeTable(total_buckets, scope_counter, curr_scope);
         curr_scope = new_scope;
-        out << "\tScopeTable# " << curr_scope->getId() << " created\n";
+        out<<"\tScopeTable# "<<curr_scope->getId()<<" created\n";
     }
 
     bool exitScope(ofstream& out){
         if(curr_scope->getParentScope() == nullptr){
             return false;
         }
-        out << "\tScopeTable# " << curr_scope->getId() << " removed\n";
+        out<<"\tScopeTable# "<<curr_scope->getId()<<" removed\n";
         ScopeTable* temp = curr_scope;
         curr_scope = curr_scope->getParentScope();
         delete temp;
@@ -258,7 +258,7 @@ public:
 
 int main(int argc, char* argv[]){
     if(argc < 3){
-        cout << "Usage: " << argv[0] << " <input_file> <output_file>" << endl;
+        cout<<"Usage: "<<argv[0]<<" <input_file> <output_file>"<<endl;
         return 1;
     }
 
@@ -266,7 +266,7 @@ int main(int argc, char* argv[]){
     ofstream outfile(argv[2]);
 
     if(!infile.is_open() || !outfile.is_open()){
-        cout << "Error opening files!" << endl;
+        cout<<"Error opening files!"<<endl;
         return 1;
     }
 
@@ -283,7 +283,7 @@ int main(int argc, char* argv[]){
     ss >> buckets;
 
     SymbolTable st(buckets);
-    outfile << "\tScopeTable# 1 created\n";
+    outfile<<"\tScopeTable# 1 created\n";
 
     unsigned int cmd_counter = 1;
 
@@ -325,36 +325,36 @@ int main(int argc, char* argv[]){
             continue;
         }
 
-        outfile << "Cmd " << cmd_counter++ << ": " << tokens[0];
+        outfile<<"Cmd "<<cmd_counter++<<": "<<tokens[0];
         for(int i = 1; i < token_count; i++){
-            outfile << " " << tokens[i];
+            outfile<<" "<<tokens[i];
         }
-        outfile << "\n";
+        outfile<<"\n";
 
         if(opcode == "Q"){
             while(st.exitScope(outfile)); 
-            outfile << "\tScopeTable# 1 removed\n";
+            outfile<<"\tScopeTable# 1 removed\n";
             delete[] tokens;
             break;
         }
 
         if(opcode == "I" && token_count < 3){
-            outfile << "\tNumber of parameters mismatch for the command I\n";
+            outfile<<"\tNumber of parameters mismatch for the command I\n";
             delete[] tokens;
             continue;
         }
         if(opcode == "L" && token_count != 2){
-            outfile << "\tNumber of parameters mismatch for the command L\n";
+            outfile<<"\tNumber of parameters mismatch for the command L\n";
             delete[] tokens;
             continue;
         }
         if(opcode == "D" && token_count != 2){
-            outfile << "\tNumber of parameters mismatch for the command D\n";
+            outfile<<"\tNumber of parameters mismatch for the command D\n";
             delete[] tokens;
             continue;
         }
         if(opcode == "P" && token_count != 2){
-            outfile << "\tNumber of parameters mismatch for the command P\n";
+            outfile<<"\tNumber of parameters mismatch for the command P\n";
             delete[] tokens;
             continue;
         }
@@ -366,7 +366,7 @@ int main(int argc, char* argv[]){
             if(type == "FUNCTION"){
                 string return_type = tokens[3];
                 string param_str = "FUNCTION," + return_type + "<==(";
-                for (int i = 4; i < token_count; i++){
+                for(int i = 4; i < token_count; i++){
                     param_str += tokens[i];
                     if(i < token_count - 1) param_str += ",";
                 }
@@ -375,7 +375,7 @@ int main(int argc, char* argv[]){
             } 
             else if(type == "STRUCT" || type == "UNION"){
                 string comp_str = type + ",{";
-                for (int i = 3; i < token_count; i += 2){
+                for(int i = 3; i < token_count; i += 2){
                     comp_str += "(" + tokens[i] + "," + tokens[i+1] + ")";
                     if(i + 2 < token_count) comp_str += ",";
                 }
@@ -386,11 +386,11 @@ int main(int argc, char* argv[]){
             SymbolInfo* sym = new SymbolInfo(name, type);
             unsigned int b_idx, s_idx;
             if(st.insert(sym, b_idx, s_idx)){
-                outfile << "\tInserted in ScopeTable# " << st.getcurrScope()->getId() 
-                        << " at position " << (b_idx + 1) << ", " << s_idx << "\n";
+                outfile<<"\tInserted in ScopeTable# "<<st.getcurrScope()->getId() 
+                       <<" at position "<<(b_idx + 1)<<", "<<s_idx<<"\n";
             }
             else{
-                outfile << "\t'" << name << "' already exists in the current ScopeTable\n";
+                outfile<<"\t'"<<name<<"' already exists in the current ScopeTable\n";
                 delete sym;
             }
         } 
@@ -399,22 +399,22 @@ int main(int argc, char* argv[]){
             unsigned int scope_id, b_idx, s_idx;
             SymbolInfo* found = st.lookUp(name, scope_id, b_idx, s_idx);
             if(found != nullptr){
-                outfile << "\t'" << name << "' found in ScopeTable# " << scope_id 
-                        << " at position " << (b_idx + 1) << ", " << s_idx << "\n";
+                outfile<<"\t'"<<name<<"' found in ScopeTable# "<<scope_id 
+                       <<" at position "<<(b_idx + 1)<<", "<<s_idx<<"\n";
             }
             else{
-                outfile << "\t'" << name << "' not found in any of the ScopeTables\n";
+                outfile<<"\t'"<<name<<"' not found in any of the ScopeTables\n";
             }
         } 
         else if(opcode == "D"){
             string name = tokens[1];
             unsigned int b_idx, s_idx;
             if(st.remove(name, b_idx, s_idx)){
-                outfile << "\tDeleted '" << name << "' from ScopeTable# " 
-                        << st.getcurrScope()->getId() << " at position " << (b_idx + 1) << ", " << s_idx << "\n";
+                outfile<<"\tDeleted '"<<name<<"' from ScopeTable# " 
+                       <<st.getcurrScope()->getId()<<" at position "<<(b_idx + 1)<<", "<<s_idx<<"\n";
             }
             else{
-                outfile << "\tNot found in the current ScopeTable\n";
+                outfile<<"\tNot found in the current ScopeTable\n";
             }
         } 
         else if(opcode == "P"){

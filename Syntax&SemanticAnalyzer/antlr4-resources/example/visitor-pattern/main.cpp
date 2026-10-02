@@ -1,9 +1,9 @@
-#include <iostream>
-#include <fstream>
-#include "antlr4-runtime.h"
-#include "ExpressionLexer.h"
-#include "ExpressionParser.h"
-#include "EvalVisitor.h"
+#include<iostream>
+#include<fstream>
+#include"antlr4-runtime.h"
+#include"ExpressionLexer.h"
+#include"ExpressionParser.h"
+#include"EvalVisitor.h"
 
 using namespace antlr4;
 using namespace tree;
@@ -11,14 +11,14 @@ using namespace std;
 
 int main(int argc, const char* argv[]){
     if(argc < 2){
-        cerr << "Usage: " << argv[0] << " <input_file>" << endl;
+        cerr<<"Usage: "<<argv[0]<<" <input_file>"<<endl;
         return 1;
     }
 
     // ---- Input File ----
     ifstream inputFile(argv[1]);
     if(!inputFile.is_open()){
-        cerr << "Error opening input file: " << argv[1] << endl;
+        cerr<<"Error opening input file: "<<argv[1]<<endl;
         return 1;
     }
 
@@ -38,10 +38,10 @@ int main(int argc, const char* argv[]){
     EvalVisitor visitor;
     any value = visitor.visit(tree);
     int result = any_cast<int>(value);
-    cout << result << endl;
+    cout<<result<<endl;
 
     // clean up
     inputFile.close();
-    cout << "Parsing completed" << endl;
+    cout<<"Parsing completed"<<endl;
     return 0;
 }

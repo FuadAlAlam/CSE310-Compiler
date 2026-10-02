@@ -1,9 +1,9 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
-#include <iostream>
-#include <fstream>
-#include <string>
+#include<iostream>
+#include<fstream>
+#include<string>
 
 using namespace std;
 
@@ -42,7 +42,7 @@ public:
     unsigned int SDBMHash(string str){
         unsigned int hash = 0;
         for(size_t i = 0; i < str.length(); i++){
-            hash = (str[i]) + (hash << 6) + (hash << 16) - hash;
+            hash = (str[i]) + (hash<<6) + (hash<<16) - hash;
         }
         return hash % num_buckets;
     }
@@ -111,16 +111,16 @@ public:
     }
 
     void print(ofstream& out){
-        out << "ScopeTable # " << id << "\n";
+        out<<"ScopeTable # "<<id<<"\n";
         for(unsigned int i = 0; i < num_buckets; i++){
             if(buckets[i] == nullptr) continue;
-            out << i << " --> ";
+            out<<i<<" --> ";
             SymbolInfo* temp = buckets[i];
             while(temp != nullptr){
-                out << "< " << temp->getName() << " : " << temp->getType() << " >";
+                out<<"< "<<temp->getName()<<" : "<<temp->getType()<<" >";
                 temp = temp->getNext();
             }
-            out << "\n";
+            out<<"\n";
         }
     }
 };

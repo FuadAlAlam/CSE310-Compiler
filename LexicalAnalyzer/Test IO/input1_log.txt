@@ -9,7 +9,7 @@ Line no 1: Token <LPAREN> Lexeme ( found
 
 Line no 1: Token <RPAREN> Lexeme ) found
 
-Line no 1: Token <LCURL> Lexeme { found
+Line no 1: Token <LCURL> Lexeme{ found
 
 Line no 2: Token <INT> Lexeme int found
 
@@ -154,7 +154,8 @@ ScopeTable # 1
 
 Line no 7: Token <ASSIGNOP> Lexeme = found
 
-Line no 7: Token <CONST_CHAR> Lexeme '\r' found --> <CONST_CHAR, >
+Line no 7: Token <CONST_CHAR> Lexeme '\r' found --> <CONST_CHAR, 
+>
 
 ScopeTable # 1.1
 0 --> < '\n' : CONST_CHAR >< ch3 : ID >
@@ -437,7 +438,7 @@ Line no 14: Token <RTHIRD> Lexeme ] found
 Line no 14: Token <RPAREN> Lexeme ) found
 
 Line no 14: Token <RPAREN> Lexeme ) found
-
+{
 Line no 14: Token <LCURL> Lexeme { found
 
 Line no 15: Token <ID> Lexeme _i found
