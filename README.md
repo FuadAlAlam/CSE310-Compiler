@@ -6,7 +6,7 @@ The project incrementally builds from low-level symbol table management to full 
 
 ---
 
-## 🏗️ Compiler Pipeline Architecture
+## Compiler Pipeline Architecture
 
 ```
 +-------------------------------------------------------------------------+
@@ -44,7 +44,7 @@ The project incrementally builds from low-level symbol table management to full 
 
 ---
 
-## 📚 Assignments Breakdown
+## Assignments Breakdown
 
 ### 1. [Symbol Table](SymbolTable/)
 Implementation of a hierarchical, scope-aware symbol table data structure required by all compiler phases to track identifier bindings and declarations.
@@ -108,7 +108,7 @@ Generates executable **8086 Assembly** code from the validated parse tree and AS
 
 ---
 
-## 🚀 Build and Run Instructions
+## Build and Run Instructions
 
 ### 1. Symbol Table
 ```bash
